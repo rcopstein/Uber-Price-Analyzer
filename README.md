@@ -1,3 +1,3 @@
-# Uber Price Analyzer (_A.K.A Project Rider_)
+# Uber&trade; Price Analyzer (_A.K.A Project Rider_)
 
-Tool for analysing Uber prices on recurring paths and times
+Tool for analysing Uber&trade; prices on recurring paths and times
