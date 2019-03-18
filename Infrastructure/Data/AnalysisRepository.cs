@@ -5,6 +5,7 @@ using Infrastructure.Mapper;
 using Infrastructure.DTOs;
 using Domain.Models;
 using System.Linq;
+using System;
 
 namespace Infrastructure.Data
 {
@@ -22,11 +23,24 @@ namespace Infrastructure.Data
             return AnalysisMapper.FromDTO(result);
         }
 
+        public Analysis Get(Guid id)
+        {
+            var dto = _context.Set<AnalysisDTO>()
+                .Include(x => x.StartLocation)
+                .Include(x => x.EndLocation)
+                .Where(x => x.Id.Equals(id))
+                .FirstOrDefault();
+
+            return AnalysisMapper.FromDTO(dto);
+        }
+
         public void Add(Analysis analysis)
         {
             var dto = AnalysisMapper.ToDTO(analysis);
             _context.Set<AnalysisDTO>().Add(dto);
             _context.SaveChanges();
+
+            analysis.Id = dto.Id;
         }
 
         public AnalysisRepository(DbContext context)

@@ -17,6 +17,7 @@ using Application.Exceptions;
 using Microsoft.AspNetCore.Http;
 using System.IO;
 using Newtonsoft.Json;
+using Application.UseCases.GetAnalysis;
 
 namespace API
 {
@@ -39,6 +40,7 @@ namespace API
             // Services
             services.AddScoped<IIncludeAnalysis, IncludeAnalysis>();
             services.AddScoped<IGetAllAnalyses, GetAllAnalyses>();
+            services.AddScoped<IGetAnalysis, GetAnalysis>();
             services.AddScoped<DbContext, Database>();
 
             // Repositories
@@ -76,6 +78,7 @@ namespace API
                     else
                     {
                         ctx.Response.StatusCode = 500;
+                        await ctx.Response.WriteAsync(error.ToString());
                     }
 
                 });

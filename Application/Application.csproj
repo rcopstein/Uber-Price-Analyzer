@@ -22,6 +22,7 @@
     <Folder Include="Interfaces\Repositories\" />
     <Folder Include="Use Cases\Get All Analyses\" />
     <Folder Include="Exceptions\" />
+    <Folder Include="Use Cases\Get Analysis\" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Domain\Domain.csproj" />

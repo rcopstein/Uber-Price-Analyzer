@@ -16,7 +16,15 @@ namespace Infrastructure.Data
         {
             base.OnModelCreating(modelBuilder);
 
-            modelBuilder.Entity<AnalysisDTO>().HasKey(nameof(AnalysisDTO.Id));
+            modelBuilder
+                .Entity<AnalysisDTO>()
+                .Property(x => x.Id)
+                .IsRequired()
+                .ValueGeneratedOnAdd();
+
+            modelBuilder.
+                Entity<AnalysisDTO>()
+                .HasKey(x => x.Id);
         }
     }
 }

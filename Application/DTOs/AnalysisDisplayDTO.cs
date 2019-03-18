@@ -1,4 +1,5 @@
-﻿using Domain.Models;
+﻿using System;
+using Domain.Models;
 
 namespace Application.DTOs
 {
@@ -8,5 +9,6 @@ namespace Application.DTOs
         public Location EndLocation { get; set; }
         public TimeFrame TimeFrame { get; set; }
         public Status Status { get; set; }
+        public Guid Id { get; set; }
     }
 }

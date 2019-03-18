@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using Microsoft.AspNetCore.Mvc;
 using Application.DTOs;
 using System.Net.Http;
+using System;
 
 namespace API.Controllers
 {
@@ -12,19 +13,7 @@ namespace API.Controllers
         private readonly IHttpClientFactory _httpClientFactory;
         private readonly IIncludeAnalysis _includeAnalysis;
         private readonly IGetAllAnalyses _getAllAnalyses;
-
-        public AnalysisController(
-            IHttpClientFactory httpClientFactory,
-            IIncludeAnalysis includeAnalysis,
-            IGetAllAnalyses getAllAnalyses)
-        {
-            _httpClientFactory = httpClientFactory;
-            _includeAnalysis = includeAnalysis;
-            _getAllAnalyses = getAllAnalyses;
-        }
-
-        // Location start = new Location(37.7752315f, -122.418075f);
-        // Location end = new Location(37.7752415f, -122.518075f);
+        private readonly IGetAnalysis _getAnalysis;
 
         // GET: api/analysis
         [HttpGet]
@@ -36,13 +25,33 @@ namespace API.Controllers
             return Json(analyses);
         }
 
+        // GET: api/analysis/{id}
+        [HttpGet("{id}")]
+        public ActionResult<AnalysisDTO> Get(Guid id)
+        {
+            AnalysisDTO result = _getAnalysis.Execute(id);
+            return Json(result);
+        }
+
         // POST: api/analysis
         [HttpPost]
         public IActionResult Post([FromBody] AnalysisIncludeDTO command)
         {
-            long id = _includeAnalysis.Execute(command);
-            return CreatedAtAction(nameof(GetAll), id); // TODO Change to 'Get'
+            Guid id = _includeAnalysis.Execute(command);
+            var url = Url.Action(nameof(Get), new { id });
+            return Created(url.ToLower(), null);
         }
 
+        public AnalysisController(
+            IHttpClientFactory httpClientFactory,
+            IIncludeAnalysis includeAnalysis,
+            IGetAllAnalyses getAllAnalyses,
+            IGetAnalysis getAnalysis)
+        {
+            _httpClientFactory = httpClientFactory;
+            _includeAnalysis = includeAnalysis;
+            _getAllAnalyses = getAllAnalyses;
+            _getAnalysis = getAnalysis;
+        }
     }
 }

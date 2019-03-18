@@ -21,7 +21,8 @@ namespace Application.UseCases.GetAllAnalyses
                     StartLocation = analysis.StartLocation,
                     EndLocation = analysis.EndLocation,
                     TimeFrame = analysis.TimeFrame,
-                    Status = analysis.Status
+                    Status = analysis.Status,
+                    Id = analysis.Id
                 });
             }
 

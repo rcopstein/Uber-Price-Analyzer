@@ -12,7 +12,7 @@ namespace Application.UseCases.IncludeAnalysis
     {
         private readonly IAnalysisRepository _repository;
 
-        public long Execute(AnalysisIncludeDTO command)
+        public Guid Execute(AnalysisIncludeDTO command)
         {
             Validator validator = new Validator();
             ValidationSummary summary = validator.Validate(command);
@@ -26,7 +26,7 @@ namespace Application.UseCases.IncludeAnalysis
             };
             _repository.Add(analysis);
 
-            return 1000;
+            return analysis.Id;
         }
 
         public IncludeAnalysis(IAnalysisRepository repository)

@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using Domain.Models;
+using System;
 
 namespace Application.Interfaces.Repositories
 {
@@ -8,5 +9,7 @@ namespace Application.Interfaces.Repositories
         IEnumerable<Analysis> GetAll();
 
         void Add(Analysis analysis);
+
+        Analysis Get(Guid id);
     }
 }
