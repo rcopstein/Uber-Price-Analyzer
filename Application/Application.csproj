@@ -19,7 +19,6 @@
     <Folder Include="Validation\" />
     <Folder Include="Validation\Specifications\" />
     <Folder Include="Use Cases\Include Analysis\" />
-    <Folder Include="Interfaces\Repositories\" />
     <Folder Include="Use Cases\Get All Analyses\" />
     <Folder Include="Exceptions\" />
     <Folder Include="Use Cases\Get Analysis\" />

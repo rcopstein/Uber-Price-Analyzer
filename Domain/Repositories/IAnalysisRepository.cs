@@ -2,11 +2,11 @@
 using Domain.Models;
 using System;
 
-namespace Application.Interfaces.Repositories
+namespace Domain.Repositories
 {
     public interface IAnalysisRepository
     {
-        IEnumerable<Analysis> GetAll();
+        IEnumerable<Analysis> List();
 
         void Add(Analysis analysis);
 

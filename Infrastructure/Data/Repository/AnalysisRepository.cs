@@ -1,19 +1,20 @@
-﻿using Application.Interfaces.Repositories;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
 using Infrastructure.Mapper;
 using Infrastructure.DTOs;
+using Domain.Repositories;
 using Domain.Models;
 using System.Linq;
 using System;
 
-namespace Infrastructure.Data
+namespace Infrastructure.Data.Repository
 {
     public class AnalysisRepository : IAnalysisRepository
     {
         private readonly DbContext _context;
 
-        public IEnumerable<Analysis> GetAll()
+
+        public IEnumerable<Analysis> List()
         {
             var result = _context
                 .Set<AnalysisDTO>()
@@ -21,6 +22,15 @@ namespace Infrastructure.Data
                 .Include(x => x.EndLocation)
                 .ToList();
             return AnalysisMapper.FromDTO(result);
+        }
+
+        public void Add(Analysis analysis)
+        {
+            var dto = AnalysisMapper.ToDTO(analysis);
+            _context.Set<AnalysisDTO>().Add(dto);
+            _context.SaveChanges();
+
+            analysis.Id = dto.Id;
         }
 
         public Analysis Get(Guid id)
@@ -34,14 +44,6 @@ namespace Infrastructure.Data
             return AnalysisMapper.FromDTO(dto);
         }
 
-        public void Add(Analysis analysis)
-        {
-            var dto = AnalysisMapper.ToDTO(analysis);
-            _context.Set<AnalysisDTO>().Add(dto);
-            _context.SaveChanges();
-
-            analysis.Id = dto.Id;
-        }
 
         public AnalysisRepository(DbContext context)
         {

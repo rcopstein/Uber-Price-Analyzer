@@ -1,4 +1,4 @@
-﻿using Application.Interfaces.Repositories;
+﻿using Domain.Repositories;
 using Application.Interfaces.UseCases;
 using System.Collections.Generic;
 using Application.DTOs;
@@ -11,7 +11,7 @@ namespace Application.UseCases.GetAllAnalyses
 
         public IEnumerable<AnalysisDisplayDTO> Execute()
         {
-            var analyses = _repository.GetAll();
+            var analyses = _repository.List();
             var result = new List<AnalysisDisplayDTO>();
 
             foreach (var analysis in analyses)

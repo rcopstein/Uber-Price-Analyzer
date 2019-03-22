@@ -1,15 +1,17 @@
-﻿using System;
-using Application.DTOs;
+﻿using Application.Interfaces.UseCases;
+using Application.Interfaces.Services;
 using Application.Validation;
-using Application.Interfaces.UseCases;
-using Application.Interfaces.Repositories;
-using Domain.Models;
 using Application.Exceptions;
+using Domain.Repositories;
+using Application.DTOs;
+using Domain.Models;
+using System;
 
 namespace Application.UseCases.IncludeAnalysis
 {
     public class IncludeAnalysis : IIncludeAnalysis
     {
+        private readonly IBackgroundTaskManager _backgroundTaskManager;
         private readonly IAnalysisRepository _repository;
 
         public Guid Execute(AnalysisIncludeDTO command)
@@ -26,12 +28,16 @@ namespace Application.UseCases.IncludeAnalysis
             };
             _repository.Add(analysis);
 
+            _backgroundTaskManager.InitializeTaskForAnalysis(analysis.Id);
+
             return analysis.Id;
         }
 
-        public IncludeAnalysis(IAnalysisRepository repository)
+        public IncludeAnalysis(IAnalysisRepository repository,
+            IBackgroundTaskManager backgroundTaskManager)
         {
             _repository = repository;
+            _backgroundTaskManager = backgroundTaskManager;
         }
     }
 }

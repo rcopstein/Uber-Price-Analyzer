@@ -1,7 +1,7 @@
 ﻿using System;
 using Domain.Models;
 using Application.DTOs;
-using Application.Interfaces.Repositories;
+using Domain.Repositories;
 using Application.Interfaces.UseCases;
 
 namespace Application.UseCases.GetAnalysis

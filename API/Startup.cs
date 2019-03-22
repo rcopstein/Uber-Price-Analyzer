@@ -1,5 +1,6 @@
 ﻿using Hangfire;
 using Infrastructure.Data;
+using Infrastructure.Data.Repository;
 using Hangfire.MemoryStorage;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Builder;
@@ -9,7 +10,7 @@ using Microsoft.Extensions.DependencyInjection;
 
 using Microsoft.EntityFrameworkCore;
 using Application.Interfaces.UseCases;
-using Application.Interfaces.Repositories;
+using Domain.Repositories;
 using Application.UseCases.GetAllAnalyses;
 using Application.UseCases.IncludeAnalysis;
 using Microsoft.AspNetCore.Diagnostics;
@@ -18,6 +19,8 @@ using Microsoft.AspNetCore.Http;
 using System.IO;
 using Newtonsoft.Json;
 using Application.UseCases.GetAnalysis;
+using Application.Interfaces.Services;
+using Infrastructure.Services;
 
 namespace API
 {
@@ -37,14 +40,19 @@ namespace API
             services.AddHangfire(x => x.UseMemoryStorage());
             services.AddHttpClient();
 
-            // Services
+            // Use Cases
             services.AddScoped<IIncludeAnalysis, IncludeAnalysis>();
             services.AddScoped<IGetAllAnalyses, GetAllAnalyses>();
             services.AddScoped<IGetAnalysis, GetAnalysis>();
-            services.AddScoped<DbContext, Database>();
 
-            // Repositories
+            // Services
+            services.AddScoped<IBackgroundTaskManager, BackgroundTaskManager>();
+            services.AddScoped<IPriceAnalyzer, PriceAnalyzer>();
+            services.AddScoped<IUberAPI, UberAPI>();
+
+            // Data
             services.AddScoped<IAnalysisRepository, AnalysisRepository>();
+            services.AddScoped<DbContext, Database>();
         }
 
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)
