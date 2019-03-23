@@ -1,10 +1,10 @@
 ﻿using System;
-using Application.DTOs;
+using Domain.Models;
 
 namespace Application.Interfaces.UseCases
 {
     public interface IGetAnalysis
     {
-        AnalysisDTO Execute(Guid id);
+        Analysis Execute(Guid id);
     }
 }

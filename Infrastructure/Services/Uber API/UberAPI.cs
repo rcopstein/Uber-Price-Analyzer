@@ -1,4 +1,5 @@
-﻿using Domain.Models;
+﻿using System;
+using Domain.Models;
 using System.Net.Http;
 using System.Threading.Tasks;
 using System.Collections.Generic;
@@ -41,14 +42,27 @@ namespace Infrastructure.Services.UberAPI
             return request;
         }
 
-        private async Task<Analysis> ReadResponse(HttpResponseMessage response)
+        private async Task<IEnumerable<PriceEstimate>> ReadResponse(HttpResponseMessage response)
         {
-            var result = await response.Content.ReadAsAsync<EstimateResponse>();
+            var estimateResponse = await response.Content.ReadAsAsync<EstimateResponse>();
+            var estimates = estimateResponse.Prices;
 
-            return null;
+            var result = new List<PriceEstimate>();
+            foreach (Estimate e in estimates)
+            {
+                result.Add(new PriceEstimate
+                {
+                    ProductId = e.product_id,
+                    HighEstimate = e.high_estimate,
+                    LowEstimate = e.low_estimate,
+                    Date = DateTime.Now
+                });
+            }
+
+            return result;
         }
 
-        public async Task<string> Estimate(Location start, Location end)
+        public async Task<IEnumerable<PriceEstimate>> Estimate(Location start, Location end)
         {
             string endpoint = "/estimates/price";
 
@@ -59,9 +73,7 @@ namespace Infrastructure.Services.UberAPI
             HttpResponseMessage response = await client.SendAsync(request);
             response.EnsureSuccessStatusCode();
 
-
-
-            return await response.Content.ReadAsStringAsync();
+            return await ReadResponse(response);
         }
     }
 }

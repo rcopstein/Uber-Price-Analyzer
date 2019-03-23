@@ -52,6 +52,7 @@ namespace API
             services.AddScoped<IUberAPI, UberAPI>();
 
             // Data
+            services.AddScoped<IPriceEstimateRepository, PriceEstimateRepository>();
             services.AddScoped<IAnalysisRepository, AnalysisRepository>();
             services.AddScoped<DbContext, Database>();
         }

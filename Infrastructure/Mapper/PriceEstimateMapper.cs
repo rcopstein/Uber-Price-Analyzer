@@ -14,6 +14,7 @@ namespace Infrastructure.Mapper
             {
                 Date = dto.Date,
                 ProductId = dto.ProductId,
+                AnalysisId = dto.AnalysisId,
                 LowEstimate = dto.LowEstimate,
                 HighEstimate = dto.HighEstimate
             };
@@ -22,6 +23,8 @@ namespace Infrastructure.Mapper
         public static IEnumerable<PriceEstimate> FromDTO(
             IEnumerable<PriceEstimateDTO> dtos)
         {
+            if (dtos == null) return null;
+
             List<PriceEstimate> result = new List<PriceEstimate>();
             foreach (var dto in dtos) result.Add(FromDTO(dto));
             return result;
@@ -35,6 +38,7 @@ namespace Infrastructure.Mapper
             {
                 Date = entity.Date,
                 ProductId = entity.ProductId,
+                AnalysisId = entity.AnalysisId,
                 LowEstimate = entity.LowEstimate,
                 HighEstimate = entity.HighEstimate
             };
@@ -43,6 +47,8 @@ namespace Infrastructure.Mapper
         public static IEnumerable<PriceEstimateDTO> ToDTO(
             IEnumerable<PriceEstimate> entities)
         {
+            if (entities == null) return null;
+
             List<PriceEstimateDTO> result = new List<PriceEstimateDTO>();
             foreach (var entity in entities) result.Add(ToDTO(entity));
             return result;

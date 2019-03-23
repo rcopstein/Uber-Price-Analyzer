@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using Microsoft.AspNetCore.Mvc;
 using Application.DTOs;
 using System.Net.Http;
+using Domain.Models;
 using System;
 
 namespace API.Controllers
@@ -27,9 +28,9 @@ namespace API.Controllers
 
         // GET: api/analysis/{id}
         [HttpGet("{id}")]
-        public ActionResult<AnalysisDTO> Get(Guid id)
+        public ActionResult<Analysis> Get(Guid id)
         {
-            AnalysisDTO result = _getAnalysis.Execute(id);
+            Analysis result = _getAnalysis.Execute(id);
             return Json(result);
         }
 

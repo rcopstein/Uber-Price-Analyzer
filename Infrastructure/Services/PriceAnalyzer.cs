@@ -8,7 +8,8 @@ namespace Infrastructure.Services
 {
     public class PriceAnalyzer : IPriceAnalyzer
     {
-        private readonly IAnalysisRepository _repository;
+        private readonly IPriceEstimateRepository _priceEstimateRepository;
+        private readonly IAnalysisRepository _analysisRepository;
         private readonly IUberAPI _uberAPI;
 
         private Location startLocation;
@@ -71,7 +72,7 @@ namespace Infrastructure.Services
 
         private Analysis LoadAnalysis(Guid id)
         {
-            Analysis analysis = _repository.Get(id);
+            Analysis analysis = _analysisRepository.Get(id);
             if (analysis == null) return null;
 
             startLocation = analysis.StartLocation;
@@ -87,10 +88,15 @@ namespace Infrastructure.Services
 
         // Task
 
-        private async Task GetReport()
+        private async Task GetReport(Analysis analysis)
         {
             var result = await _uberAPI.Estimate(startLocation, endLocation);
-            Console.WriteLine(result);
+            foreach (var estimate in result)
+            {
+                estimate.AnalysisId = analysis.Id;
+                _priceEstimateRepository.Add(estimate);
+                Console.WriteLine($"{estimate.ProductId}: {estimate.AverageEstimate}");
+            }
         }
 
         public async Task StartAnalysis(Guid id)
@@ -115,7 +121,7 @@ namespace Infrastructure.Services
                 "To: " + to + "\n" +
                 "Every: " + every);
 
-                await GetReport();
+                await GetReport(analysis);
 
                 if (!await WaitForNextCheck()) break;
                 now = DateTime.Now;
@@ -126,9 +132,12 @@ namespace Infrastructure.Services
 
         // Constructor
 
-        public PriceAnalyzer(IUberAPI uberAPI, IAnalysisRepository repository)
+        public PriceAnalyzer(IUberAPI uberAPI,
+            IAnalysisRepository analysisRepository,
+            IPriceEstimateRepository priceEstimateRepository)
         {
-            _repository = repository;
+            _priceEstimateRepository = priceEstimateRepository;
+            _analysisRepository = analysisRepository;
             _uberAPI = uberAPI;
         }
     }
