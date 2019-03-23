@@ -21,7 +21,8 @@ namespace Infrastructure.Mapper
                     To = dto.To,
                     From = dto.From,
                     Every = dto.Every
-                }
+                },
+                Prices = PriceEstimateMapper.FromDTO(dto.Prices)
             };
         }
 
@@ -47,7 +48,8 @@ namespace Infrastructure.Mapper
                 StartLocation = LocationMapper.ToDTO(entity.StartLocation),
                 To = entity.TimeFrame.To,
                 From = entity.TimeFrame.From,
-                Every = entity.TimeFrame.Every
+                Every = entity.TimeFrame.Every,
+                Prices = PriceEstimateMapper.ToDTO(entity.Prices)
             };
         }
 

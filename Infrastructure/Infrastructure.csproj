@@ -19,6 +19,7 @@
     <Folder Include="DTOs\" />
     <Folder Include="Mapper\" />
     <Folder Include="Data\Repository\" />
+    <Folder Include="Services\Uber API\" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Domain\Domain.csproj" />

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace Domain.Models
 {
@@ -10,9 +11,12 @@ namespace Domain.Models
         public Location EndLocation { get; set; }
         public Location StartLocation { get; set; }
 
+        public IEnumerable<PriceEstimate> Prices { get; set; }
+
         public Analysis()
         {
             Status = Status.NotStarted;
+            Prices = new List<PriceEstimate>();
         }
     }
 }

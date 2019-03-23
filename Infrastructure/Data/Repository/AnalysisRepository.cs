@@ -13,7 +13,6 @@ namespace Infrastructure.Data.Repository
     {
         private readonly DbContext _context;
 
-
         public IEnumerable<Analysis> List()
         {
             var result = _context
@@ -43,7 +42,6 @@ namespace Infrastructure.Data.Repository
 
             return AnalysisMapper.FromDTO(dto);
         }
-
 
         public AnalysisRepository(DbContext context)
         {

@@ -22,9 +22,27 @@ namespace Infrastructure.Data
                 .IsRequired()
                 .ValueGeneratedOnAdd();
 
-            modelBuilder.
-                Entity<AnalysisDTO>()
+            modelBuilder
+                .Entity<AnalysisDTO>()
+                .HasMany(x => x.Prices);
+
+            modelBuilder
+                .Entity<AnalysisDTO>()
                 .HasKey(x => x.Id);
+
+            modelBuilder
+                .Entity<LocationDTO>()
+                .HasKey(x => x.Id);
+
+            modelBuilder
+                .Entity<PriceEstimateDTO>()
+                .HasKey(nameof(PriceEstimateDTO.AnalysisId), 
+                        nameof(PriceEstimateDTO.ProductId),
+                        nameof(PriceEstimateDTO.Date));
+
+            modelBuilder
+                .Entity<PriceEstimateDTO>()
+                .HasOne(x => x.Analysis);
         }
     }
 }

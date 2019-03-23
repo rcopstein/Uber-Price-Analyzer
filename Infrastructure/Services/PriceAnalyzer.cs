@@ -89,7 +89,7 @@ namespace Infrastructure.Services
 
         private async Task GetReport()
         {
-            var result = await _uberAPI.EstimatePrice(startLocation, endLocation);
+            var result = await _uberAPI.Estimate(startLocation, endLocation);
             Console.WriteLine(result);
         }
 

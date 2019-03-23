@@ -5,6 +5,6 @@ namespace Application.Interfaces.Services
 {
     public interface IUberAPI
     {
-        Task<string> EstimatePrice(Location start, Location end);
+        Task<string> Estimate(Location start, Location end);
     }
 }

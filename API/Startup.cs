@@ -21,6 +21,7 @@ using Newtonsoft.Json;
 using Application.UseCases.GetAnalysis;
 using Application.Interfaces.Services;
 using Infrastructure.Services;
+using Infrastructure.Services.UberAPI;
 
 namespace API
 {
