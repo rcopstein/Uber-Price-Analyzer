@@ -13,17 +13,9 @@ namespace Application.UseCases.IncludeAnalysis
                 new IsNotNull<Location>(),
                 "Start Location cannot be null");
 
-            Add(x => x.StartLocation,
-                new LocationWithinBounds(),
-                "Start Location must be within bounds");
-
             Add(x => x.EndLocation,
                 new IsNotNull<Location>(),
                 "End Location cannot be null");
-
-            Add(x => x.EndLocation,
-                new LocationWithinBounds(),
-                "End Location must be within bounds");
         }
     }
 }

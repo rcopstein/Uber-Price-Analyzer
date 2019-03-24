@@ -83,6 +83,9 @@ namespace Infrastructure.Services
             to = analysis.TimeFrame.To;
             now = DateTime.Now;
 
+            analysis.Status = Status.InProgress;
+            _analysisRepository.Update(analysis);
+
             return analysis;
         }
 
@@ -126,6 +129,9 @@ namespace Infrastructure.Services
                 if (!await WaitForNextCheck()) break;
                 now = DateTime.Now;
             }
+
+            analysis.Status = Status.Completed;
+            _analysisRepository.Update(analysis);
 
             Console.WriteLine($"[TASK {id}] Finished");
         }

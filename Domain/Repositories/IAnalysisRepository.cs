@@ -8,6 +8,8 @@ namespace Domain.Repositories
     {
         IEnumerable<Analysis> List();
 
+        void Update(Analysis analysis);
+
         void Add(Analysis analysis);
 
         Analysis Get(Guid id);

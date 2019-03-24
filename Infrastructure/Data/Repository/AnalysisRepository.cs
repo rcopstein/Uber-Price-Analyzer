@@ -23,6 +23,18 @@ namespace Infrastructure.Data.Repository
             return AnalysisMapper.FromDTO(result);
         }
 
+        public void Update(Analysis analysis)
+        {
+            var dto = _context.Set<AnalysisDTO>()
+                .Where(x => x.Id == analysis.Id)
+                .FirstOrDefault();
+
+            if (dto == null) return;
+
+            dto.Status = analysis.Status;
+            _context.SaveChanges();
+        }
+
         public void Add(Analysis analysis)
         {
             var dto = AnalysisMapper.ToDTO(analysis);
@@ -37,6 +49,7 @@ namespace Infrastructure.Data.Repository
             var dto = _context.Set<AnalysisDTO>()
                 .Include(x => x.StartLocation)
                 .Include(x => x.EndLocation)
+                .Include(x => x.Prices)
                 .Where(x => x.Id.Equals(id))
                 .FirstOrDefault();
 
