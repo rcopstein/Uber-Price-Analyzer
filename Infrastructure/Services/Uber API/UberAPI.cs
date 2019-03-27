@@ -5,19 +5,22 @@ using System.Threading.Tasks;
 using System.Collections.Generic;
 using Application.Interfaces.Services;
 using Microsoft.AspNetCore.WebUtilities;
+using Microsoft.Extensions.Configuration;
 
 namespace Infrastructure.Services.UberAPI
 {
     public class UberAPI : IUberAPI
     {
-        private static readonly string serverKey = "xmM25b_vp8DKvv5Yik7M_W2ql3s6JjnSjbjJ2pNw";
         private static readonly string address = "https://sandbox-api.uber.com/v1.2";
         private readonly IHttpClientFactory _httpClientFactory;
+        private readonly string _serverKey;
 
         // Constructor
-        public UberAPI(IHttpClientFactory httpClientFactory)
+        public UberAPI(IHttpClientFactory httpClientFactory, 
+            IConfiguration configuration)
         {
             _httpClientFactory = httpClientFactory;
+            _serverKey = configuration["UberAPI:ServerToken"];
         }
 
         private Dictionary<string, string> BuildParams(Location start, Location end)
@@ -36,7 +39,7 @@ namespace Infrastructure.Services.UberAPI
             var uri = QueryHelpers.AddQueryString(address + endpoint, values);
             HttpRequestMessage request = new HttpRequestMessage(HttpMethod.Get, uri);
 
-            request.Headers.Add("Authorization", "Token " + serverKey);
+            request.Headers.Add("Authorization", "Token " + _serverKey);
             request.Headers.Add("Accept-Language", "en_US");
 
             return request;
