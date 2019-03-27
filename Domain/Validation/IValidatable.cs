@@ -2,6 +2,6 @@
 {
     public interface IValidatable
     {
-        bool IsValid();
+        ValidationSummary IsValid();
     }
 }

@@ -1,4 +1,4 @@
-﻿namespace Application.Validation.Specifications
+﻿namespace Domain.Validation.Specifications
 {
     public class IsNotNull<T> : ISpecification<T> where T : class
     {

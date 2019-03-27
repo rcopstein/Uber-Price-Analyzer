@@ -7,10 +7,21 @@ namespace Domain.Models
         public float Latitude { get; set; }
         public float Longitude { get; set; }
 
-        public bool IsValid()
+        public ValidationSummary IsValid()
         {
-            return Latitude >= -90 && Latitude <= 90 &&
-                   Longitude >= -180 && Longitude <= 180;
+            ValidationSummary summary = new ValidationSummary();
+
+            if (Latitude < -90 || Latitude > 90)
+                summary.Add(
+                    "Latitude must be between -90 and 90", 
+                    nameof(Latitude));
+
+            if (Longitude < -180 || Longitude > 180)
+                summary.Add(
+                    "Longitude must be between -180 and 180",
+                    nameof(Longitude));
+
+            return summary;
         }
 
         public Location(float latitude, float longitude)

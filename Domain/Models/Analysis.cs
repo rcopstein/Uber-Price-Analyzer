@@ -1,6 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using Domain.Validation;
+using System;
 
 namespace Domain.Models
 {
@@ -14,11 +14,15 @@ namespace Domain.Models
 
         public IEnumerable<PriceEstimate> Prices { get; set; }
 
-        public bool IsValid()
+        public ValidationSummary IsValid()
         {
-            return StartLocation.IsValid()
-                && EndLocation.IsValid()
-                && TimeFrame.IsValid();
+            ValidationSummary summary = new ValidationSummary();
+
+            if (StartLocation != null) summary.Add(StartLocation.IsValid());
+            if (EndLocation != null) summary.Add(EndLocation.IsValid());
+            if (TimeFrame != null) summary.Add(TimeFrame.IsValid());
+
+            return summary;
         }
 
         public Analysis()

@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Linq.Expressions;
 
-namespace Application.Validation
+namespace Domain.Validation
 {
     public interface IValidationRule<TEntity>
     {

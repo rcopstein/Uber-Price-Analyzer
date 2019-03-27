@@ -1,4 +1,4 @@
-﻿namespace Application.Validation
+﻿namespace Domain.Validation
 {
     public class ValidationResult
     {

@@ -1,5 +1,5 @@
-﻿using Application.Validation.Specifications;
-using Application.Validation;
+﻿using Domain.Validation.Specifications;
+using Domain.Validation;
 using Application.DTOs;
 using Domain.Models;
 

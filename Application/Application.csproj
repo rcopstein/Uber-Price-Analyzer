@@ -16,8 +16,6 @@
     <Folder Include="Interfaces\Use Cases\" />
     <Folder Include="DTOs\" />
     <Folder Include="Use Cases\" />
-    <Folder Include="Validation\" />
-    <Folder Include="Validation\Specifications\" />
     <Folder Include="Use Cases\Include Analysis\" />
     <Folder Include="Use Cases\Get All Analyses\" />
     <Folder Include="Exceptions\" />

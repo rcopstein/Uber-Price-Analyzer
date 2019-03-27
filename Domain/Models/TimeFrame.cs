@@ -9,9 +9,16 @@ namespace Domain.Models
         public DateTime From { get; set; }
         public TimeSpan Every { get; set; }
 
-        public bool IsValid()
+        public ValidationSummary IsValid()
         {
-            return From < To;
+            ValidationSummary summary = new ValidationSummary();
+
+            if (From >= To)
+                summary.Add(
+                    "Date 'From' must be smaller than 'To'",
+                    nameof(From));
+
+            return summary;
         }
     }
 }

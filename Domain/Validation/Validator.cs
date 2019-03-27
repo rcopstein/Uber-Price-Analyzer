@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq.Expressions;
 
-namespace Application.Validation
+namespace Domain.Validation
 {
     public abstract class Validator<TEntity>
     {
@@ -25,13 +25,19 @@ namespace Application.Validation
 
         public ValidationSummary Validate(TEntity entity)
         {
-            ValidationSummary summary = new ValidationSummary();
+            ValidationSummary summary;
+
+            if (entity is IValidatable) 
+                summary = ((IValidatable)entity).IsValid();
+            else 
+                summary = new ValidationSummary();
 
             foreach (IValidationRule<TEntity> rule in rules)
             {
                 ValidationResult result = rule.Validate(entity);
                 if (!result.IsValid) summary.Errors.Add(result);
             }
+
 
             return summary;
         }
