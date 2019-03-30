@@ -1,6 +1,7 @@
-﻿using System;
-using Hangfire;
+﻿using Hangfire;
+using Domain.Models;
 using Application.Interfaces.Services;
+using System;
 
 namespace Infrastructure.Services
 {
@@ -8,10 +9,20 @@ namespace Infrastructure.Services
     {
         private readonly IPriceAnalyzer _priceAnalyzer;
 
-        public void InitializeTaskForAnalysis(Guid id)
+        public void InitializeTaskForAnalysis(Analysis analysis)
         {
-            BackgroundJob.Enqueue(
-                () => _priceAnalyzer.StartAnalysis(id));
+            var id = analysis.Id;
+
+            var timeFrom = analysis.TimeFrame.TimeFrom;
+            timeFrom -= TimeZoneInfo.Local.BaseUtcOffset;
+
+            var hour = timeFrom.Hours;
+            var minute = timeFrom.Minutes;
+
+            RecurringJob.AddOrUpdate(
+                id.ToString(),
+                () => _priceAnalyzer.StartAnalysis(id),
+                $"{minute} {hour} * * *");
         }
 
         public BackgroundTaskManager(IPriceAnalyzer priceAnalyzer)

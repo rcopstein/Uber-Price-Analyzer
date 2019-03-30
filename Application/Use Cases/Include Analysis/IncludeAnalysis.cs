@@ -1,8 +1,8 @@
 ﻿using Application.Interfaces.UseCases;
 using Application.Interfaces.Services;
-using Application.Validation;
 using Application.Exceptions;
 using Domain.Repositories;
+using Domain.Validation;
 using Application.DTOs;
 using Domain.Models;
 using System;
@@ -28,7 +28,7 @@ namespace Application.UseCases.IncludeAnalysis
             };
             _repository.Add(analysis);
 
-            _backgroundTaskManager.InitializeTaskForAnalysis(analysis.Id);
+            _backgroundTaskManager.InitializeTaskForAnalysis(analysis);
 
             return analysis.Id;
         }

@@ -1,5 +1,5 @@
 ﻿using System;
-using Application.Validation;
+using Domain.Validation;
 
 namespace Application.Exceptions
 {

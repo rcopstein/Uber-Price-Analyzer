@@ -9,6 +9,7 @@ using System;
 namespace API.Controllers
 {
     [Route("api/[controller]")]
+    [ApiController]
     public class AnalysisController : Controller
     {
         private readonly IHttpClientFactory _httpClientFactory;

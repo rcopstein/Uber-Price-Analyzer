@@ -1,9 +1,9 @@
-﻿using System;
+﻿using Domain.Models;
 
 namespace Application.Interfaces.Services
 {
     public interface IBackgroundTaskManager
     {
-        void InitializeTaskForAnalysis(Guid id);
+        void InitializeTaskForAnalysis(Analysis analysis);
     }
 }

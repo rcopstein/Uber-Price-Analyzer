@@ -5,18 +5,27 @@ namespace Domain.Models
 {
     public class TimeFrame : IValidatable
     {
-        public DateTime To { get; set; }
-        public DateTime From { get; set; }
+        public DayOfWeek[] Weekdays { get; set; }
+
+        public DateTime DateFrom { get; set; }
+        public TimeSpan TimeFrom { get; set; }
+        public DateTime DateTo { get; set; }
+        public TimeSpan TimeTo { get; set; }
         public TimeSpan Every { get; set; }
 
         public ValidationSummary IsValid()
         {
             ValidationSummary summary = new ValidationSummary();
 
-            if (From >= To)
+            if (DateFrom >= DateTo)
                 summary.Add(
                     "Date 'From' must be smaller than 'To'",
-                    nameof(From));
+                    nameof(DateFrom));
+
+            if (TimeFrom >= TimeTo)
+                summary.Add(
+                    "Time 'From' must be smaller than 'To'",
+                    nameof(TimeFrom));
 
             return summary;
         }

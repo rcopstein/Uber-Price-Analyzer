@@ -1,6 +1,8 @@
 ﻿using System.Collections.Generic;
 using Infrastructure.DTOs;
 using Domain.Models;
+using System;
+using System.Text;
 
 namespace Infrastructure.Mapper
 {
@@ -10,6 +12,12 @@ namespace Infrastructure.Mapper
         {
             if (dto == null) return null;
 
+            var days = dto.Weekdays.Split(',');
+            var weekdays = new DayOfWeek[days.Length];
+
+            for (int i = 0; i < weekdays.Length; ++i)
+                weekdays[i] = (DayOfWeek) Convert.ToInt32(days[i]);
+
             return new Analysis()
             {
                 Id = dto.Id,
@@ -18,9 +26,12 @@ namespace Infrastructure.Mapper
                 StartLocation = LocationMapper.FromDTO(dto.StartLocation),
                 TimeFrame = new TimeFrame()
                 {
-                    To = dto.To,
-                    From = dto.From,
-                    Every = dto.Every
+                    DateTo = dto.DateTo,
+                    DateFrom = dto.DateFrom,
+                    TimeTo = dto.TimeTo,
+                    TimeFrom = dto.TimeFrom,
+                    Every = dto.Every,
+                    Weekdays = weekdays
                 },
                 Prices = PriceEstimateMapper.FromDTO(dto.Prices)
             };
@@ -40,16 +51,26 @@ namespace Infrastructure.Mapper
         {
             if (entity == null) return null;
 
+            StringBuilder builder = new StringBuilder();
+            for (int i = 0; i < entity.TimeFrame.Weekdays.Length; ++i)
+            {
+                if (i > 0) builder.Append(',');
+                builder.Append((int)entity.TimeFrame.Weekdays[i]);
+            }
+
             return new AnalysisDTO()
             {
                 Id = entity.Id,
                 Status = entity.Status,
+                Weekdays = builder.ToString(),
+                Every = entity.TimeFrame.Every,
+                DateTo = entity.TimeFrame.DateTo,
+                TimeTo = entity.TimeFrame.TimeTo,
+                DateFrom = entity.TimeFrame.DateFrom,
+                TimeFrom = entity.TimeFrame.TimeFrom,
+                Prices = PriceEstimateMapper.ToDTO(entity.Prices),
                 EndLocation = LocationMapper.ToDTO(entity.EndLocation),
                 StartLocation = LocationMapper.ToDTO(entity.StartLocation),
-                To = entity.TimeFrame.To,
-                From = entity.TimeFrame.From,
-                Every = entity.TimeFrame.Every,
-                Prices = PriceEstimateMapper.ToDTO(entity.Prices)
             };
         }
 

@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using Domain.Repositories;
 using Domain.Models;
 using System;
+using System.Linq;
 
 namespace Infrastructure.Services
 {
@@ -15,10 +16,13 @@ namespace Infrastructure.Services
         private Location startLocation;
         private Location endLocation;
 
+        private DayOfWeek[] weekdays; // Verificar porque o parâmetro é null
+        private TimeSpan timeFrom;
+        private DateTime dateFrom;
+        private TimeSpan timeTo;
+        private DateTime dateTo;
         private TimeSpan every;
-        private DateTime from;
         private DateTime now;
-        private DateTime to;
 
         private double Milliseconds(DateTime date)
         {
@@ -29,8 +33,8 @@ namespace Infrastructure.Services
 
         private TimeSpan TimeToWaitForNextCheck()
         {
-            var _now = Milliseconds(now);
-            var _from = Milliseconds(from);
+            var _now = now.TimeOfDay.TotalMilliseconds;
+            var _from = timeFrom.TotalMilliseconds;
             var _every = every.TotalMilliseconds;
 
             var passed = _now - _from;
@@ -42,7 +46,8 @@ namespace Infrastructure.Services
 
         private TimeSpan TimeToWaitForStart()
         {
-            var wait = Milliseconds(from) - Milliseconds(now);
+            var wait 
+                = timeFrom.TotalMilliseconds - now.TimeOfDay.TotalMilliseconds;
             return TimeSpan.FromMilliseconds(wait);
         }
 
@@ -50,7 +55,7 @@ namespace Infrastructure.Services
 
         private async Task WaitForStart()
         {
-            if (now < from)
+            if (now.TimeOfDay < timeFrom)
             {
                 Console.WriteLine("Still haven't started...");
                 var wait = TimeToWaitForStart();
@@ -63,7 +68,7 @@ namespace Infrastructure.Services
         private async Task<bool> WaitForNextCheck()
         {
             var wait = TimeToWaitForNextCheck();
-            if (now + wait >= to) return false;
+            if (now.TimeOfDay + wait >= timeTo) return false;
             await Task.Delay(wait);
             return true;
         }
@@ -78,15 +83,29 @@ namespace Infrastructure.Services
             startLocation = analysis.StartLocation;
             endLocation = analysis.EndLocation;
 
+            weekdays = analysis.TimeFrame.Weekdays;
+            dateFrom = analysis.TimeFrame.DateFrom;
+            timeFrom = analysis.TimeFrame.TimeFrom;
+            dateTo = analysis.TimeFrame.DateTo;
+            timeTo = analysis.TimeFrame.TimeTo;
             every = analysis.TimeFrame.Every;
-            from = analysis.TimeFrame.From;
-            to = analysis.TimeFrame.To;
             now = DateTime.Now;
 
             analysis.Status = Status.InProgress;
             _analysisRepository.Update(analysis);
 
             return analysis;
+        }
+
+        private bool CheckCancellation()
+        {
+            if (now.Date > dateTo.Date) return false;
+            return true;
+        }
+
+        private bool CheckDayOfWeek()
+        {
+            return weekdays.Contains(now.DayOfWeek);
         }
 
         // Task
@@ -109,19 +128,22 @@ namespace Infrastructure.Services
 
             Console.WriteLine($"[TASK {id}] Starting\n" +
             	"Now: " + now + "\n" +
-            	"From: " + from + "\n" +
-                "To: " + to + "\n" +
+            	"From: " + dateFrom + "\n" +
+                "To: " + dateTo + "\n" +
                 "Every: " + every);
+
+            if (!CheckCancellation()) return; // TODO Cancel Recurrent Task
+            if (!CheckDayOfWeek()) return;
 
             await WaitForStart();
             now = DateTime.Now;
 
-            while (now < to)
+            while (now.TimeOfDay < timeTo)
             {
                 Console.WriteLine($"[TASK {id}] Executing\n" +
                 "Now: " + now + "\n" +
-                "From: " + from + "\n" +
-                "To: " + to + "\n" +
+                "From: " + dateFrom + "\n" +
+                "To: " + dateTo + "\n" +
                 "Every: " + every);
 
                 await GetReport(analysis);
@@ -129,11 +151,6 @@ namespace Infrastructure.Services
                 if (!await WaitForNextCheck()) break;
                 now = DateTime.Now;
             }
-
-            analysis.Status = Status.Completed;
-            _analysisRepository.Update(analysis);
-
-            Console.WriteLine($"[TASK {id}] Finished");
         }
 
         // Constructor

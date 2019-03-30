@@ -10,12 +10,17 @@ namespace Infrastructure.DTOs
         public Status Status { get; set; }
 
         public TimeSpan Every { get; set; }
-        public DateTime From { get; set; }
-        public DateTime To { get; set; }
+
+        public DateTime DateFrom { get; set; }
+        public DateTime DateTo { get; set; }
+
+        public TimeSpan TimeFrom { get; set; }
+        public TimeSpan TimeTo { get; set; }
 
         public LocationDTO EndLocation { get; set; }
         public LocationDTO StartLocation { get; set; }
 
+        public string Weekdays { get; set; }
         public virtual IEnumerable<PriceEstimateDTO> Prices { get; set; }
     }
 }
