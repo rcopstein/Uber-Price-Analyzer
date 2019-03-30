@@ -22,6 +22,7 @@ using Application.UseCases.GetAnalysis;
 using Application.Interfaces.Services;
 using Infrastructure.Services;
 using Infrastructure.Services.UberAPI;
+using Application.UseCases.GenerateReport;
 
 namespace API
 {
@@ -43,6 +44,7 @@ namespace API
 
             // Use Cases
             services.AddScoped<IIncludeAnalysis, IncludeAnalysis>();
+            services.AddScoped<IGenerateReport, GenerateReport>();
             services.AddScoped<IGetAllAnalyses, GetAllAnalyses>();
             services.AddScoped<IGetAnalysis, GetAnalysis>();
 

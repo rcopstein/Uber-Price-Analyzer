@@ -20,6 +20,7 @@
     <Folder Include="Use Cases\Get All Analyses\" />
     <Folder Include="Exceptions\" />
     <Folder Include="Use Cases\Get Analysis\" />
+    <Folder Include="Use Cases\Generate Report\" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Domain\Domain.csproj" />

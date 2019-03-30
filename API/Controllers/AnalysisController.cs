@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using Microsoft.AspNetCore.Mvc;
 using Application.DTOs;
-using System.Net.Http;
 using Domain.Models;
 using System;
 
@@ -12,8 +11,8 @@ namespace API.Controllers
     [ApiController]
     public class AnalysisController : Controller
     {
-        private readonly IHttpClientFactory _httpClientFactory;
         private readonly IIncludeAnalysis _includeAnalysis;
+        private readonly IGenerateReport _generateReport;
         private readonly IGetAllAnalyses _getAllAnalyses;
         private readonly IGetAnalysis _getAnalysis;
 
@@ -32,7 +31,15 @@ namespace API.Controllers
         public ActionResult<Analysis> Get(Guid id)
         {
             Analysis result = _getAnalysis.Execute(id);
-            return Json(result);
+            return result;
+        }
+
+        // GET: api/analysis/{id}/report
+        [HttpGet("{id}/report")]
+        public ActionResult<Report> GetReport(Guid id)
+        {
+            Report report = _generateReport.Execute(id);
+            return report;
         }
 
         // POST: api/analysis
@@ -45,13 +52,13 @@ namespace API.Controllers
         }
 
         public AnalysisController(
-            IHttpClientFactory httpClientFactory,
             IIncludeAnalysis includeAnalysis,
+            IGenerateReport generateReport,
             IGetAllAnalyses getAllAnalyses,
             IGetAnalysis getAnalysis)
         {
-            _httpClientFactory = httpClientFactory;
             _includeAnalysis = includeAnalysis;
+            _generateReport = generateReport;
             _getAllAnalyses = getAllAnalyses;
             _getAnalysis = getAnalysis;
         }
