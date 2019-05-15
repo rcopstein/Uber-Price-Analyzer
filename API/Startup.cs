@@ -13,16 +13,12 @@ using Application.Interfaces.UseCases;
 using Domain.Repositories;
 using Application.UseCases.GetAllAnalyses;
 using Application.UseCases.IncludeAnalysis;
-using Microsoft.AspNetCore.Diagnostics;
-using Application.Exceptions;
-using Microsoft.AspNetCore.Http;
-using System.IO;
-using Newtonsoft.Json;
 using Application.UseCases.GetAnalysis;
 using Application.Interfaces.Services;
 using Infrastructure.Services;
 using Infrastructure.Services.UberAPI;
 using Application.UseCases.GenerateReport;
+using Microsoft.AspNetCore.HttpOverrides;
 
 namespace API
 {
@@ -37,9 +33,10 @@ namespace API
 
         public void ConfigureServices(IServiceCollection services)
         {
+            // services.AddDbContext<Database>(opt => opt.UseInMemoryDatabase("Database"));
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
-            services.AddDbContext<Database>(opt => opt.UseInMemoryDatabase("Database")); 
             services.AddHangfire(x => x.UseMemoryStorage());
+            services.AddDbContext<Database>();
             services.AddHttpClient();
 
             // Use Cases
@@ -61,46 +58,22 @@ namespace API
 
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)
         {
-            if (env.IsDevelopment()) app.UseDeveloperExceptionPage();
+            if (env.IsDevelopment())
+            {
+                app.UseDeveloperExceptionPage();
+            }
             else app.UseHsts();
 
-            app.UseExceptionHandler(handler =>
+            app.UseForwardedHeaders(new ForwardedHeadersOptions
             {
-                handler.Run(async ctx =>
-                {
-                    var exceptionHandlerPathFeature =
-                        ctx.Features.Get<IExceptionHandlerPathFeature>();
-
-                    var error = exceptionHandlerPathFeature?.Error;
-
-                    if (error is ValidationException)
-                    {
-                        ctx.Response.StatusCode = 400;
-                        ctx.Response.ContentType = "application/json";
-
-                        using (var writer = new StreamWriter(ctx.Response.Body))
-                        {
-                            new JsonSerializer().Serialize(
-                                writer,
-                                ((ValidationException)error).Summary);
-                            await writer.FlushAsync().ConfigureAwait(false);
-                        }
-                    }
-
-                    else
-                    {
-                        ctx.Response.StatusCode = 500;
-                        await ctx.Response.WriteAsync(error.ToString());
-                    }
-
-                });
+                ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto
             });
+
             app.UseHttpsRedirection();
             app.UseMvc();
 
             app.UseHangfireServer();
             app.UseHangfireDashboard();
-
         }
     }
 }

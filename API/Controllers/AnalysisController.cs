@@ -3,11 +3,13 @@ using System.Collections.Generic;
 using Microsoft.AspNetCore.Mvc;
 using Application.DTOs;
 using Domain.Models;
+using API.Filters;
 using System;
 
 namespace API.Controllers
 {
     [Route("api/[controller]")]
+    [ValidationExceptionFilter]
     [ApiController]
     public class AnalysisController : Controller
     {
