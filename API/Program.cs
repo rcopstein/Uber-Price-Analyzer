@@ -30,6 +30,10 @@ namespace API
                         config.AddJsonFile("/etc/rider/database.credentials",
                                            optional: false,
                                            reloadOnChange: true);
+
+                        config.AddJsonFile("/etc/rider/uber.credentials",
+                                           false,
+                                           true);
                     }
                 })
                 .UseStartup<Startup>();

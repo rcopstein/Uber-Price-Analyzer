@@ -1,26 +1,28 @@
-﻿using System;
-using Domain.Models;
-using System.Net.Http;
-using System.Threading.Tasks;
-using System.Collections.Generic;
-using Application.Interfaces.Services;
+﻿using Microsoft.Extensions.Configuration;
 using Microsoft.AspNetCore.WebUtilities;
-using Microsoft.Extensions.Configuration;
+using Application.Interfaces.Services;
+using System.Collections.Generic;
+using System.Threading.Tasks;
+using System.Net.Http;
+using Domain.Models;
+using System;
 
 namespace Infrastructure.Services.UberAPI
 {
     public class UberAPI : IUberAPI
     {
-        private static readonly string address = "https://sandbox-api.uber.com/v1.2";
         private readonly IHttpClientFactory _httpClientFactory;
         private readonly string _serverKey;
+        private readonly string _host;
 
-        // Constructor
-        public UberAPI(IHttpClientFactory httpClientFactory, 
+        public UberAPI(
+            IHttpClientFactory httpClientFactory, 
             IConfiguration configuration)
         {
-            _httpClientFactory = httpClientFactory;
             _serverKey = configuration["UberAPI:ServerToken"];
+            _host = configuration["UberAPI:Host"];
+
+            _httpClientFactory = httpClientFactory;
         }
 
         private Dictionary<string, string> BuildParams(Location start, Location end)
@@ -36,7 +38,7 @@ namespace Infrastructure.Services.UberAPI
 
         private HttpRequestMessage BuildRequest(string endpoint, Dictionary<string, string> values)
         {
-            var uri = QueryHelpers.AddQueryString(address + endpoint, values);
+            var uri = QueryHelpers.AddQueryString(_host + endpoint, values);
             HttpRequestMessage request = new HttpRequestMessage(HttpMethod.Get, uri);
 
             request.Headers.Add("Authorization", "Token " + _serverKey);
